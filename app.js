@@ -20,7 +20,7 @@ const	commentRoutes 		= require('./routes/comments'),
 			reviewRoutes			= require('./routes/reviews');
 			
 			// mongodb://localhost:27017/yelp_camp_vfinalB4
-mongoose.connect(process.env.MONGODB_ATLAS, {
+mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false,
