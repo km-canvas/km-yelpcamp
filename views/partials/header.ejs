@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Yelp Camp App</title>
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+	<script src="https://kit.fontawesome.com/e341e30335.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+	
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+	<a class="navbar-brand" href="/">YelpCamp</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div id="navbarCollapse" class="collapse navbar-collapse">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item <%= typeof page !== 'undefined' && page === 'campgrounds' ? 'active' : '' %>">
+				<a class="nav-link"	href="/campgrounds">Home</a>
+			</li>
+		</ul>
+		<ul class="navbar-nav justify-content-end">
+				<% if(!currentUser){ %>
+						<li class="nav-item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>">
+							<a class="nav-link" href="/login">Login</a>
+						</li>
+						<li class="nav-item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>">
+							<a class="nav-link" href="/register">Sign Up</a>
+						</li>
+				<% } else { %>
+						<li class="nav-item">
+							<a class="nav-link" href="/users/<%= currentUser.id %>">Welcome back, <%= currentUser.username %></a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/logout">Logout</a>
+						</li>
+				<% } %>
+		</ul>
+		<% if(typeof page !== 'undefined' && page === 'campgrounds' ? 'active' : '' ) { %> 
+		<form action="/campgrounds" method="GET" class="form-inline mt-2 mt-md-0">
+			<input type="text" name="search" placeholder="Campground search..." aria-label="Search" class="form-control mr-sm-2">
+			<button type="submit" class="btn btn-outline-secondary my-2 my-sm-0"><i class="fas fa-search"></i></button>
+		</form>
+		<% } %>
+	</div>
+</nav>
+
+
+<div class="container">
+	<% if(error && error.length > 0){ %> 
+	<div class="alert alert-danger" role="alert"> 
+		<%= error %> 
+	</div>
+	<% } %>  
+	<% if(success && success.length > 0){ %> 
+	<div class="alert alert-success" role="alert"> 
+		<%= success %> 
+	</div> 
+	<% } %>  
+</div>
+
+<!-- Variable "error" taken from req.locals.error from the app.js file -->
+<!-- Logic for flash message in the middleware index.js file for "isLoggedIn" function -->
+
+<div class="container">

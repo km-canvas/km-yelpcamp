@@ -1,0 +1,44 @@
+<%- include("../partials/header") %>
+
+
+	<div class="row editPage bg-light rounded-lg">
+		<div class="text-center col-md-12 col-lg-9 m-auto">
+			<h1 class="mb-4">Create New Campground</h1>
+		</div>
+		<div class="col-md-12 col-lg-9 m-auto">
+			<!-- Create a form to add a new campground, ACTION relates to the POST route, in this case "/campgrounds" -->
+			<form class="form-edit" action="/campgrounds" method="POST" enctype="multipart/form-data">
+				<div class="form-group row">
+					<label for="createCampName" class="col-md-3 col-form-label">Campground Name</label>
+					<div class="col-md-9">
+						<input id="createCampName" class="form-control" type="text" name="campground[name]">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="createCampCost" class="col-md-3 col-form-label">Price per night</label>				
+					<div class="col-md-9">
+						<input id="createCampCost" class="form-control" type="number" name="campground[price]" placeholder="$" min="0" step="0.01">			
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="createCampDesc" class="col-md-3 col-form-label">Description</label>				
+					<div class="col-md-9">
+						<textarea class="form-control" type="text" name="campground[description]" id="createCampDesc" rows="10" placeholder="Campground highlights, location, amenitites, etc."></textarea>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="createCampImg" class="col-md-3 col-form-label">Image</label>				
+					<div class="col-md-9">
+						<input id="createCampImg" type="file" name="image" accept="image/*" required>
+					</div>
+				</div>	
+				<div class="form-group">
+					<button class="btn btn-lg btn-primary btn-block mt-2">Submit</button>
+				</div>
+			</form>
+			<div class="text-center"><a href="/campgrounds">Go back to Campgrounds</a></div>
+		</div>
+	</div> <!-- Closing for form row container-->
+
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,20 @@
+<%- include("../partials/header") %>
+
+
+	<div class="row col-md-8 col-lg-6 text-center editPage bg-light rounded-lg m-auto">
+		<div class="col-12 m-auto">
+			<h1>Edit Comment</h1>		
+		</div>
+		<div class="col-12 m-auto">
+			<!-- Create a form to add a new comment to a specific campground id that will be sent to the correct POST route-->
+			<form class="form-setup" action="/campgrounds/<%= campground_id %>/comments/<%= comment._id %>?_method=PUT" method="POST">
+				<label for="editComment" class="form-group"></label>
+					<textarea id="editComment" class="form-control" type="text" name="comment[text]" rows="5"><%= comment.text %></textarea>
+				<button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Submit</button>
+			</form>
+			<a href="/campgrounds">Go back to Campgrounds</a>
+		</div>
+	</div> <!-- Closing for form row container-->
+
+
+<%- include("../partials/footer") %>

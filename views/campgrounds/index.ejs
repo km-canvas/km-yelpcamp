@@ -1,0 +1,91 @@
+<%- include("../partials/header") %>
+
+<% if(noMatch !== null) { %> 
+	<div class="alert alert-warning" role="alert"> 
+		<%= noMatch %> 
+	</div> 
+<% } %>  
+
+	<header class="jumbotron">
+		<div class="container">
+			<h1><i class="fas fa-campground"></i>	Welcome to Yelp Camp</h1>
+			<p>View our hand-picked campgrounds from around the world</p>
+			<p>
+				<a class="btn btn-primary btn-lg" href="/campgrounds/new">Add New Campground</a>
+			</p>
+		</div> <!-- Closing for text/header inside jumbotron container -->
+	</header> <!-- Closing for jumbotron container -->
+
+	<div class="row text-center" id="campground-grid">
+		<% campgrounds.forEach(function(campground){  %>
+			<div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+				<div class="card">
+					<img class="indexCards card-img-top" src=" <%= campground.image %> " alt=" <%= campground.name %> ">
+					<div class="card-body">
+                        <div class="card-img-overlay badge label-primary text-right text-light">
+                          <i class="fas fa-thumbs-up"></i> <%= campground.likes.length %>
+                        </div>
+                        <h5 class="card-title"><%= campground.name %> </h5>
+                        <% if (campground.rating === 0) { %>
+                            <em>No reviews yet.</em>
+                            <% } else { %>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star <% if (campground.rating > 1.5) { %> checked <% } %>"></span>
+                            <span class="fa fa-star <% if (campground.rating > 2.5) { %> checked <% } %>"></span>
+                            <span class="fa fa-star <% if (campground.rating > 3.5) { %> checked <% } %>"></span>
+                            <span class="fa fa-star <% if (campground.rating > 4.5) { %> checked <% } %>"></span>
+                            <% } %>
+						<p class="card-text d-none d-lg-block"><%= campground.description.substring(0, 100) %>...</p> 
+                        <a class="btn btn-sm btn-primary" href="/campgrounds/<%= campground._id %> ">More Info</a>
+					</div> <!-- Closing for card-body container -->
+				</div>
+			</div>
+		<% }) %>
+	</div> <!-- Closing for all campgrounds row container -->
+
+	<nav aria-label="Page navigation">
+    <% if (pages && pages > 0) { %>
+    <ul class="pagination justify-content-center">
+        <% if (current == 1) { %>
+        <li class="page-item disabled"><a class="page-link">First</a></li>
+        <% } else { %>
+        <li><a class="page-link" href="/campgrounds<%if(search){%>&search=<%=search%><%}%>">First</a></li>
+        <% } %>
+ 
+        <% if (current == 1) { %>
+        <li class="page-item disabled"><a class="page-link">«</a></li>
+        <% } else { %>
+        <li><a class="page-link" href="/campgrounds?page=<%= Number(current) - 1 %><%if(search){%>&search=<%=search%><%}%>">«</a></li>
+        <% } %>
+ 
+        <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+        <% if (i !== 1) { %>
+        <li class="page-item disabled"><a class="page-link">...</a></li>
+        <% } %>
+        <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+        <% if (i == current) { %>
+        <li class="active"><a class="page-link"><%= i %></a></li>
+        <% } else { %>
+        <li><a class="page-link" href="/campgrounds?page=<%= i %><%if(search){%>&search=<%=search%><%}%>"><%= i %></a></li>
+        <% } %>
+        <% if (i == Number(current) + 4 && i < pages) { %>
+        <li class="page-item disabled"><a class="page-link">...</a></li>
+        <% } %>
+        <% } %>
+ 
+        <% if (current == pages) { %>
+        <li class="page-item disabled"><a class="page-link">»</a></li>
+        <% } else { %>
+        <li><a class="page-link" href="/campgrounds?page=<%= Number(current) + 1 %><%if(search){%>&search=<%=search%><%}%>">»</a></li>
+        <% } %>
+ 
+        <% if (current == pages) { %>
+        <li class="page-item disabled"><a class="page-link">Last</a></li>
+        <% } else { %>
+        <li><a class="page-link" href="/campgrounds?page=<%= pages %><%if(search){%>&search=<%=search%><%}%>">Last</a></li>
+        <% } %>
+    </ul>
+    <% } %>
+</nav>
+
+<%- include("../partials/footer") %>

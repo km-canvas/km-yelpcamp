@@ -1,0 +1,19 @@
+<%- include ("../partials/header") %>
+
+<div class="row">
+	<div class="col-md-4">
+		<h1><%= user.username %></h1>
+	</div>
+	<div class="col-md-8">
+		<ul>
+			<% campgrounds.forEach(function(campground) { %> 
+			<li>
+					<a href="/campgrounds/<%= campground.id %>"><%= campground.name %></a>			
+			</li>
+			<% }) %> 	
+		</ul>
+	</div>
+</div>
+
+
+<%- include ("../partials/footer") %>

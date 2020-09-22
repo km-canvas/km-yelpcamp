@@ -1,0 +1,208 @@
+<%- include("../partials/header") %>
+
+<div class="row mb-5">
+	<div class="col-md-9 m-auto">
+		<div class="card">
+			<img class="card-img-top showCards" src="<%= campground.image %>" alt="<%=campground.name %> Photo">
+			<div class="card-img-overlay">
+				<h5 id="campPrice" class="text-light text-right p-2">$<%= campground.price %>/night</h5>
+			</div>
+			<div class="card-header">
+				<div class="card-text float-left">
+					<h4><%=campground.name %></h4>
+					<% if (campground.rating === 0) { %>
+					<div>
+						<em>No reviews yet.</em>
+					</div>
+					<% } else { %>
+					<span class="fa fa-star checked"></span>
+					<span class="fa fa-star <% if (campground.rating > 1.5) { %> checked <% } %>"></span>
+					<span class="fa fa-star <% if (campground.rating > 2.5) { %> checked <% } %>"></span>
+					<span class="fa fa-star <% if (campground.rating > 3.5) { %> checked <% } %>"></span>
+					<span class="fa fa-star <% if (campground.rating > 4.5) { %> checked <% } %>"></span>
+					<em>(Reviews: <%= campground.reviews.length %>)</em>
+					<% } %>
+				</div>
+				<div class="float-right text-right">
+					<form action="/campgrounds/<%= campground._id %>/like" method="POST">
+						<div class="btn-group">
+							<% if (currentUser && campground.likes.some(function (like) { %>
+							<% return like.equals(currentUser._id) %>
+							<%	})) { %>
+							<button class="btn btn-sm btn-primary">
+								<i class="fas fa-thumbs-up"></i> Liked
+							</button>
+							<% } else { %>
+							<button class="btn btn-sm btn-secondary">
+								<i class="fas fa-thumbs-up"></i> Like
+							</button>
+							<% } %>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<p class="card-text"><%= campground.description %></p>
+				<p class="card-text">
+					<small class="text-muted">Submitted by:
+						<a href="/users/<%= campground.author.id %>">
+							<%= campground.author.username %>
+						</a>
+						on <%= moment(campground.createdAt).format("MMMM Do YYYY") %>
+					</small>
+				</p>
+				<% if(currentUser && campground.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+				<hr />
+				<a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
+				<form class="deleteForm" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+					<button class="btn btn-sm  btn-danger">Delete</button>
+				</form>
+				<% } %>
+				<div class="float-right">
+					<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#campgroundLikes">
+						<span>Total likes: <i class="fas fa-thumbs-up"></i> <%= campground.likes.length %></span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mt-3">
+			<div class="card-header">
+				<h4 class="float-left">Latest reviews:</h4>
+				<div class="float-right">
+					<a class="btn btn-success btn-sm" href="/campgrounds/<%= campground._id %>/reviews/new">
+						Write a New Review</a>
+				</div>
+			</div>
+			<% if (campground.reviews.length === 0) { %>
+			<div class="card-body">No reviews written for this campsite yet.</div>
+			<% } else { %>
+			<% campground.reviews.slice(0, 5).forEach(function(review){ %>
+			<div class="card-body">
+				<div class="row">
+					<small class="card-text col-md-3 col-lg-2 border-right">
+						<%- '<span class="fa fa-star checked"></span>'.repeat(review.rating) %>
+						<%- '<span class="fa fa-star"></span>'.repeat(5 - review.rating) %>
+						<div class="text-muted">Review by:
+							<strong><%= review.author.username %></strong>
+						</div>
+						<span class="text-muted"><em><%= review.updatedAt.toDateString() %></em></span>
+					</small>
+					<div class="col-md-9 col-lg-10">
+						<p style="text-align: justify; word-wrap: break-word;">
+							<%= review.text %>
+						</p>
+						<% if(currentUser && review.author.id.equals(currentUser._id)){ %>
+						<div class="float-right">
+							<a class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="bottom" title="Edit review"
+								href="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>/edit">
+								<i class="fas fa-edit"></i>
+							</a>
+							<form id="delete-form" class="deleteForm"
+								action="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>?_method=DELETE" method="POST">
+								<button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="bottom"
+									title="Delete review"><i class="fas fa-trash-alt"></i>
+								</button>
+							</form>
+							<% } %>
+						</div>
+					</div>
+				</div>
+				<hr class="mb-0">
+				<% }); %>
+			</div>
+			<div class="card-footer mt-0">
+				<div>
+					<a href="/campgrounds/<%= campground._id %>/reviews">
+						<i class="fa fa-search" aria-hidden="true"></i> See all reviews
+					</a>
+				</div>
+			</div>
+			<% } %>
+		</div>
+
+		<div class="card mt-3">
+			<div class="card-header">
+				<h4 class="float-left">Latest comments:</h4>
+				<div class="float-right">
+					<a class="btn btn-sm btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Comment</a>
+				</div>
+			</div>
+			<div class="card-body overflow-auto commentCtn">
+				<% if (campground.comments.length === 0) { %>
+				<div>No comments written for this campsite yet.</div>
+				<% } else { %>
+				<!-- Loop through and display all comments for each campground -->
+				<% campground.comments.forEach(function(comment){ %>
+				<div class="row p-3">
+					<div class="col-md-12">
+						<p class="card-text text-wrap"><%= comment.text %></p>
+						<div class=" float-left cart-text">
+							<small class="text-muted">Submitted by:
+								<a href="/users/<%= comment.author.id %>">
+									<%= comment.author.username %>
+								</a>
+								<%= " - " + moment(comment.createdAt).fromNow() %>
+							</small>
+						</div>
+						<% if(currentUser && comment.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+						<div class="float-right">
+							<a class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="bottom" title="Edit comment"
+								href="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>/edit ">
+								<i class="fas fa-edit"></i>
+							</a>
+							<form class="deleteForm"
+								action="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+								<button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="bottom"
+									title="Delete comment"><i class="fas fa-trash-alt"></i></button>
+							</form>
+						</div>
+						<% } %>
+					</div>
+				</div>
+				<hr class="mb-0">
+				<% }) %>
+				<% } %>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+	<div id="campgroundLikes" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Campground likes: <%= campground.likes.length %></h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-body">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Liked by:</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% campground.likes.forEach(function(like) { %>
+							<tr>
+								<td><span class="badge"><i class="fas fa-user"></i></span><%= like.username %></td>
+							</tr>
+							<% }); %>
+							<% if (campground.likes.length === 0) { %>
+							<tr>
+								<td><em>No likes yet.</em></td>
+							</tr>
+							<% } %>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<%- include("../partials/footer") %>

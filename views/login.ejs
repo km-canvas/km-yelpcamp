@@ -1,0 +1,20 @@
+
+<%- include("partials/header") %>
+
+<div class="row text-center loginPage">
+	<div class="col-md-12">
+		<h1 class="mb-3">Login</h1>		
+	</div>
+	<div class="col-md-12">
+		<form class="form-setup" action="/login" method="post">
+			<label for="inputUsername" class="sr-only">Username</label>
+				<input id="inputUsername" class="form-control" type="text" name="username" placeholder="Username" required>
+			<label for="inputPassword" class="sr-only">Password</label>
+				<input id="inputPassword" class="form-control" type="password" name="password" placeholder="Password">
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+		</form>
+		<a href="/campgrounds">Go Back</a>
+	</div>
+</div>
+
+<%- include("partials/footer") %>

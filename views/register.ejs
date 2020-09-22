@@ -1,0 +1,22 @@
+
+<%- include("partials/header") %>
+
+<div class="row text-center registerPage">
+	<div class="col-md-12">
+		<h1 class="mb-3">Sign Up</h1>		
+	</div>
+	<div class="col-md-12">
+		<form class="form-setup" action="/register" method="post">
+			<label for="registerUsername" class="sr-only">Username</label>
+				<input id="registerUsername" class="form-control" type="text" name="username" placeholder="Username">
+			<label for="registerPassword" class="sr-only">Password</label>
+				<input id="registerPassword" class="form-control" type="password" name="password" placeholder="Password">
+			<label for="registerAdminCode" class="sr-only">Administrator Code</label>
+				<input id="registerAdminCode" class="form-control" type="password" name="adminCode" placeholder="Admin code">
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up!</button>
+		</form>
+		<a href="/campgrounds">Go Back</a>
+	</div>
+</div>
+
+<%- include("partials/footer") %>
