@@ -187,7 +187,10 @@
 						<tbody>
 							<% campground.likes.forEach(function(like) { %>
 							<tr>
-								<td><span class="badge"><i class="fas fa-user"></i></span><%= like.username %></td>
+								<td>
+									<span class="badge"><i class="fas fa-user"></i></span>
+									<a href="/users/<%= like._id %>"><%= like.username %></a>
+								</td>
 							</tr>
 							<% }); %>
 							<% if (campground.likes.length === 0) { %>
